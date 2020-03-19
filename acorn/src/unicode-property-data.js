@@ -1,5 +1,7 @@
 import {wordsRegexp} from "./util.js"
 
+// ???????
+
 // This file contains Unicode properties extracted from the ECMAScript
 // specification. The lists are extracted like so:
 // $$('#table-binary-unicode-properties > figure > table > tbody > tr > td:nth-child(1) code').map(el => el.innerText)

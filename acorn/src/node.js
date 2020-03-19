@@ -1,6 +1,7 @@
 import {Parser} from "./state"
 import {SourceLocation} from "./locutil"
 
+// AST的节点，应该是一个树，但是目前未发现Node自关联的代码
 export class Node {
   constructor(parser, pos, loc) {
     this.type = ""
@@ -19,10 +20,12 @@ export class Node {
 
 const pp = Parser.prototype
 
+// 开始解析，就是创建一个根Node
 pp.startNode = function() {
   return new Node(this, this.start, this.startLoc)
 }
 
+// 指定位置开始解析，同样创建了一个跟Node
 pp.startNodeAt = function(pos, loc) {
   return new Node(this, pos, loc)
 }

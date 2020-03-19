@@ -3,6 +3,8 @@ import {Parser} from "./state.js"
 import UNICODE_PROPERTY_VALUES from "./unicode-property-data.js"
 import {has} from "./util.js"
 
+// 正则表达式的状态，暂时先不看
+
 const pp = Parser.prototype
 
 export class RegExpValidationState {

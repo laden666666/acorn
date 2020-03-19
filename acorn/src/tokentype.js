@@ -21,21 +21,29 @@
 // to know when parsing a label, in order to allow or disallow
 // continue jumps to that label.
 
+// token 的状态，是一个状态机的模板
 export class TokenType {
   constructor(label, conf = {}) {
     this.label = label
+    // 关键字
     this.keyword = conf.keyword
+    // 用于标记正则
     this.beforeExpr = !!conf.beforeExpr
+    // 用于标记yield
     this.startsExpr = !!conf.startsExpr
+    // 用于标记循环
     this.isLoop = !!conf.isLoop
     this.isAssign = !!conf.isAssign
     this.prefix = !!conf.prefix
     this.postfix = !!conf.postfix
+    // 优先级
     this.binop = conf.binop || null
+    // 更新上下文
     this.updateContext = null
   }
 }
 
+// 设置运算符优先级
 function binop(name, prec) {
   return new TokenType(name, {beforeExpr: true, binop: prec})
 }
@@ -52,6 +60,7 @@ function kw(name, options = {}) {
 }
 
 export const types = {
+  //  变量、字面量
   num: new TokenType("num", startsExpr),
   regexp: new TokenType("regexp", startsExpr),
   string: new TokenType("string", startsExpr),
@@ -59,6 +68,7 @@ export const types = {
   eof: new TokenType("eof"),
 
   // Punctuation token types.
+  // 主要符号
   bracketL: new TokenType("[", {beforeExpr: true, startsExpr: true}),
   bracketR: new TokenType("]"),
   braceL: new TokenType("{", {beforeExpr: true, startsExpr: true}),
@@ -91,6 +101,7 @@ export const types = {
   // binary operators with a very low precedence, that should result
   // in AssignmentExpression nodes.
 
+  // 运算符
   eq: new TokenType("=", {beforeExpr: true, isAssign: true}),
   assign: new TokenType("_=", {beforeExpr: true, isAssign: true}),
   incDec: new TokenType("++/--", {prefix: true, postfix: true, startsExpr: true}),
@@ -110,6 +121,7 @@ export const types = {
   starstar: new TokenType("**", {beforeExpr: true}),
 
   // Keyword token types.
+  // 关键字
   _break: kw("break"),
   _case: kw("case", beforeExpr),
   _catch: kw("catch"),

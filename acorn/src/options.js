@@ -3,7 +3,7 @@ import {SourceLocation} from "./locutil"
 
 // A second optional argument can be given to further configure
 // the parser process. These options are recognized:
-
+// 默认配置
 export const defaultOptions = {
   // `ecmaVersion` indicates the ECMAScript version to parse. Must be
   // either 3, 5, 6 (2015), 7 (2016), 8 (2017), 9 (2018), or 10
@@ -14,6 +14,7 @@ export const defaultOptions = {
   // `sourceType` indicates the mode the code should be parsed in.
   // Can be either `"script"` or `"module"`. This influences global
   // strict mode and parsing of `import` and `export` declarations.
+  // 这里不能提供一个表达式选项吗？
   sourceType: "script",
   // `onInsertedSemicolon` can be a callback that will be called
   // when a semicolon is automatically inserted. It will be passed
@@ -90,19 +91,22 @@ export const defaultOptions = {
 }
 
 // Interpret and default an options object
-
+// 获取一个标准配置
 export function getOptions(opts) {
   let options = {}
 
   for (let opt in defaultOptions)
     options[opt] = opts && has(opts, opt) ? opts[opt] : defaultOptions[opt]
 
+  // es6之前都是使用版本号，之后使用年份。如果传入的是2015这样的年份，将其解析成6这种的版本号。
   if (options.ecmaVersion >= 2015)
     options.ecmaVersion -= 2009
 
+  // es5以下的版本，不准用保留字做属性值
   if (options.allowReserved == null)
     options.allowReserved = options.ecmaVersion < 5
 
+  // 还能这么用，api设计的真nm服气
   if (isArray(options.onToken)) {
     let tokens = options.onToken
     options.onToken = (token) => tokens.push(token)

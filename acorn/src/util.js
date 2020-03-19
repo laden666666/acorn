@@ -10,6 +10,7 @@ export const isArray = Array.isArray || ((obj) => (
   toString.call(obj) === "[object Array]"
 ))
 
+// 将一个词转为正则
 export function wordsRegexp(words) {
   return new RegExp("^(?:" + words.replace(/ /g, "|") + ")$")
 }

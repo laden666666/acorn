@@ -9,15 +9,22 @@ import {lineBreak, lineBreakG, isNewLine, nonASCIIwhitespace} from "./whitespace
 // simply exist as properties on the parser object. This is only
 // used for the onToken callback and the external tokenizer.
 
+// 文法解析器，用于生成词流（令牌流）。词法解析->文法解析（语法解析）->语义分析。parse算是文法解析器，而文法解析器依赖于词法解析
 export class Token {
   constructor(p) {
+    // 类型
     this.type = p.type
+    // 值
     this.value = p.value
+    // 开始位置
     this.start = p.start
+    // 结束位置
     this.end = p.end
     if (p.options.locations)
+      // 源码位置
       this.loc = new SourceLocation(p, p.startLoc, p.endLoc)
     if (p.options.ranges)
+      // 范围
       this.range = [p.start, p.end]
   }
 }
@@ -63,6 +70,7 @@ if (typeof Symbol !== "undefined")
 // Toggle strict mode. Re-reads the next number or string to please
 // pedantic tests (`"use strict"; 010;` should fail).
 
+// 获取栈顶的上下文
 pp.curContext = function() {
   return this.context[this.context.length - 1]
 }

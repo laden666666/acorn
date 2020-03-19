@@ -15,7 +15,7 @@
 // precedence levels that JavaScript defines.
 //
 // [opp]: http://en.wikipedia.org/wiki/Operator-precedence_parser
-
+// 核心文件，对表达式的处理
 import {types as tt} from "./tokentype"
 import {Parser} from "./state"
 import {DestructuringErrors} from "./parseutil"

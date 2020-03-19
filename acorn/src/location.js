@@ -9,6 +9,7 @@ const pp = Parser.prototype
 // of the error message, and then raises a `SyntaxError` with that
 // message.
 
+// 格式化错误，并抛出
 pp.raise = function(pos, message) {
   let loc = getLineInfo(this.input, pos)
   message += " (" + loc.line + ":" + loc.column + ")"

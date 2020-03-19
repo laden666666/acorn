@@ -75,13 +75,15 @@ Parser.acorn = {
   nonASCIIwhitespace
 }
 
+// 3个核心函数——parse 生成 ast、parseExpressionAt 生成表达式 ast、tokenizer 生成词组数组
+
 // The main exported interface (under `self.acorn` when in the
 // browser) is a `parse` function that takes a code string and
 // returns an abstract syntax tree as specified by [Mozilla parser
 // API][api].
 //
 // [api]: https://developer.mozilla.org/en-US/docs/SpiderMonkey/Parser_API
-
+// 编译一个js文件
 export function parse(input, options) {
   return Parser.parse(input, options)
 }
@@ -89,7 +91,7 @@ export function parse(input, options) {
 // This function tries to parse a single expression at a given
 // offset in a string. Useful for parsing mixed-language formats
 // that embed JavaScript expressions.
-
+// 编译一个表达式，适合小程序、vue等环境中使用
 export function parseExpressionAt(input, pos, options) {
   return Parser.parseExpressionAt(input, pos, options)
 }

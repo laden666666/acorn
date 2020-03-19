@@ -3,6 +3,7 @@ import {lineBreakG} from "./whitespace"
 // These are used when `options.locations` is on, for the
 // `startLoc` and `endLoc` properties.
 
+// 位置
 export class Position {
   constructor(line, col) {
     this.line = line
@@ -14,6 +15,7 @@ export class Position {
   }
 }
 
+// range
 export class SourceLocation {
   constructor(p, start, end) {
     this.start = start

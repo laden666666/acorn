@@ -3,8 +3,10 @@ import {SCOPE_VAR, SCOPE_FUNCTION, SCOPE_TOP, SCOPE_ARROW, SCOPE_SIMPLE_CATCH, B
 
 const pp = Parser.prototype
 
+// 作用域，保存定义的函数或者变量
 class Scope {
   constructor(flags) {
+    // ???
     this.flags = flags
     // A list of var-declared names in the current lexical scope
     this.var = []
@@ -17,10 +19,11 @@ class Scope {
 
 // The functions in this module keep track of declared variables in the current scope in order to detect duplicate variable names.
 
+// 进入新作用域
 pp.enterScope = function(flags) {
   this.scopeStack.push(new Scope(flags))
 }
-
+// 退出作用域
 pp.exitScope = function() {
   this.scopeStack.pop()
 }
