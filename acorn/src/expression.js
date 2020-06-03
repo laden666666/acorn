@@ -16,6 +16,7 @@
 //
 // [opp]: http://en.wikipedia.org/wiki/Operator-precedence_parser
 // 核心文件，对表达式的处理
+// TODO: 内容太多了，暂时不看 
 import {types as tt} from "./tokentype"
 import {Parser} from "./state"
 import {DestructuringErrors} from "./parseutil"
@@ -88,6 +89,7 @@ pp.checkPropClash = function(prop, propHash, refDestructuringErrors) {
 // and object pattern might appear (so it's possible to raise
 // delayed syntax error at correct position).
 
+// 一些场景下是禁止用 in 操作符的（in操作符可以用在别的地方, 如 for(var c = 'a' in b;false;){}，这个 in 在 for 里面，会报编译错误）
 pp.parseExpression = function(noIn, refDestructuringErrors) {
   let startPos = this.start, startLoc = this.startLoc
   let expr = this.parseMaybeAssign(noIn, refDestructuringErrors)
@@ -147,7 +149,7 @@ pp.parseMaybeAssign = function(noIn, refDestructuringErrors, afterLeftParse) {
 }
 
 // Parse a ternary conditional (`?:`) operator.
-
+// 判断三目表达式
 pp.parseMaybeConditional = function(noIn, refDestructuringErrors) {
   let startPos = this.start, startLoc = this.startLoc
   let expr = this.parseExprOps(noIn, refDestructuringErrors)

@@ -63,7 +63,8 @@ pp.expectContextual = function(name) {
 // Test whether a semicolon can be inserted at the current position.
 // 是否可以插入分号
 pp.canInsertSemicolon = function() {
-  // 文档结束可以插入分号；}后面可以插入分号；换行可以插入分号？？？？？？？？？？？？
+  // 文档结束可以插入分号；}后面可以插入分号；换行可以插入分号
+  // 参考 https://tc39.es/ecma262/#sec-automatic-semicolon-insertion
   return this.type === tt.eof ||
     this.type === tt.braceR ||
     lineBreak.test(this.input.slice(this.lastTokEnd, this.start))

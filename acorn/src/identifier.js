@@ -1,17 +1,22 @@
 // Reserved word lists for various dialects of the language
+// Identifier是一个标识，关键字、变量名等都是由标识组成，因此要识别标识
 
+// 保留字
 export const reservedWords = {
   3: "abstract boolean byte char class double enum export extends final float goto implements import int interface long native package private protected public short static super synchronized throws transient volatile",
   5: "class enum extends super const export import",
   6: "enum",
+  // 严格模式下的保留字，非严格模式下可用
   strict: "implements interface let package private protected public static yield",
+  // 严格模式下不能绑定数据的字符。可以做成员变量名，但是不能做变量名
   strictBind: "eval arguments"
 }
 
 // And the keywords
-
+// es5及以下关键字
 const ecma5AndLessKeywords = "break case catch continue debugger default do else finally for function if return switch throw try var while with null true false instanceof typeof void delete new in this"
 
+// 关键字
 export const keywords = {
   5: ecma5AndLessKeywords,
   "5module": ecma5AndLessKeywords + " export import",
@@ -61,25 +66,37 @@ function isInAstralSet(code, set) {
 }
 
 // Test whether a given character code starts an identifier.
-
+// 是否是一个合法的标识开始的字符
+// astral ？？？
 export function isIdentifierStart(code, astral) {
+  // $
   if (code < 65) return code === 36
+  // 大写字母
   if (code < 91) return true
+  // _
   if (code < 97) return code === 95
+  // 小写字母
   if (code < 123) return true
+  // JS里面，汉族等Unicode字符是可以做标识的字符的。这里姿势比较复杂，略过
   if (code <= 0xffff) return code >= 0xaa && nonASCIIidentifierStart.test(String.fromCharCode(code))
+  // 喵喵喵？？？
   if (astral === false) return false
   return isInAstralSet(code, astralIdentifierStartCodes)
 }
 
 // Test whether a given character is part of an identifier.
-
+// 合法的字符
 export function isIdentifierChar(code, astral) {
+  // $
   if (code < 48) return code === 36
+  // 数字
   if (code < 58) return true
   if (code < 65) return false
+  // 大写字母
   if (code < 91) return true
+  // _
   if (code < 97) return code === 95
+  // 小写字母
   if (code < 123) return true
   if (code <= 0xffff) return code >= 0xaa && nonASCIIidentifier.test(String.fromCharCode(code))
   if (astral === false) return false

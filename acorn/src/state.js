@@ -19,6 +19,7 @@ export class Parser {
         if (reserved = reservedWords[v]) break
       if (options.sourceType === "module") reserved += " await"
     }
+    // 确定预留字
     this.reservedWords = wordsRegexp(reserved)
     let reservedStrict = (reserved ? reserved + " " : "") + reservedWords.strict
     this.reservedWordsStrict = wordsRegexp(reservedStrict)
@@ -29,7 +30,7 @@ export class Parser {
     // Used to signal to callers of `readWord1` whether the word
     // contained any escape sequences. This is needed because words with
     // escape sequences must not be interpreted as keywords.
-    // ???????
+    // 是否包含转义字符 ？？？？？
     this.containsEsc = false
 
     // Set up token state
@@ -49,26 +50,33 @@ export class Parser {
 
     // Properties of the current token:
     // Its type
-    // 核心属性，当前所属的tokenType的值，这是一个状态模式。
+    // 核心属性
+    // 当前所属的tokenType的值，这是一个状态模式。
     // 初始是eof状态
     this.type = tt.eof
     // For tokens that include more information than their type, the value
     this.value = null
     // Its start and end offset
+    // 一个token的开始和结束位置
     this.start = this.end = this.pos
     // And, if locations are used, the {line, column} object
     // corresponding to those offsets
+    // 一个token的开始和结束位置（行、列号形式）
     this.startLoc = this.endLoc = this.curPosition()
 
     // Position information for the previous token
+    // 前一个token的开始结束位置（行列号）
     this.lastTokEndLoc = this.lastTokStartLoc = null
     this.lastTokStart = this.lastTokEnd = this.pos
 
     // The context stack is used to superficially track syntactic
     // context to predict whether a regular expression is allowed in a
     // given position.
+    // 核心属性
     // 上下文，以一个块级上下文作为起始状态
+    // 这是一个栈，用于保存各种块、作用域
     this.context = this.initialContext()
+    // ？？？？？
     this.exprAllowed = true
 
     // Figure out if it's a module code.
@@ -88,10 +96,13 @@ export class Parser {
     this.undefinedExports = {}
 
     // If enabled, skip leading hashbang line.
+    // 忽略node的cli注释
     if (this.pos === 0 && options.allowHashBang && this.input.slice(0, 2) === "#!")
       this.skipLineComment(2)
 
     // Scope tracking for duplicate variable names (see scope.js)
+    // 核心函数
+    // 作用域
     this.scopeStack = []
     this.enterScope(SCOPE_TOP)
 

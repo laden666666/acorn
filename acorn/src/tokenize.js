@@ -84,6 +84,7 @@ pp.nextToken = function() {
 
   this.start = this.pos
   if (this.options.locations) this.startLoc = this.curPosition()
+  // 如果当前解析位置已经超出源码长度，结束
   if (this.pos >= this.input.length) return this.finishToken(tt.eof)
 
   if (curContext.override) return curContext.override(this)
@@ -99,6 +100,10 @@ pp.readToken = function(code) {
   return this.getTokenFromCode(code)
 }
 
+// 喵喵喵，什么鬼
+// 参考 https://github.com/acornjs/acorn/issues/708  大家进行了讨论
+// fullCharCodeAtPos 是用 charCodeAt 实现的 codePointAt 兜底函数
+// 如字符 "𠮷" ，他是用四个字节表示一个字符。如果仅用charCodeAt，仅能获得两个字符的，是获取不到完整字符的，需要用两个字节计算其Unicode
 pp.fullCharCodeAtPos = function() {
   let code = this.input.charCodeAt(this.pos)
   if (code <= 0xd7ff || code >= 0xe000) return code

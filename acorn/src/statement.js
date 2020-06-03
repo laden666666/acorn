@@ -80,6 +80,7 @@ pp.isAsyncFunction = function() {
 pp.parseStatement = function(context, topLevel, exports) {
   let starttype = this.type, node = this.startNode(), kind
 
+  // let 很特殊，需要单独处理
   if (this.isLet(context)) {
     starttype = tt._var
     kind = "let"
@@ -207,34 +208,60 @@ pp.parseDoStatement = function(node) {
 
 pp.parseForStatement = function(node) {
   this.next()
+
+  // for await (variable of iterable) {
+  //   statement
+  // }
+  // es9的异步迭代器
   let awaitAt = (this.options.ecmaVersion >= 9 && (this.inAsync || (!this.inFunction && this.options.allowAwaitOutsideFunction)) && this.eatContextual("await")) ? this.lastTokStart : -1
+  
+  // 标记循环
   this.labels.push(loopLabel)
+
+  // 块及作用域
   this.enterScope(0)
+  // 左括号(
   this.expect(tt.parenL)
+  // 无定义索引，for(; 
   if (this.type === tt.semi) {
+    // 前面有await，后面有“;”，则不符合 awati for (xx of xx) 
     if (awaitAt > -1) this.unexpected(awaitAt)
+    // 一个语句
     return this.parseFor(node, null)
   }
+
+  // 用let var const 都可以定义
   let isLet = this.isLet()
   if (this.type === tt._var || this.type === tt._const || isLet) {
+    // 剩下的是 for(var/let/const ...;)、for(var/let/const ... if 或者 for(var/let/const ... in 3种形式
     let init = this.startNode(), kind = isLet ? "let" : this.value
     this.next()
     this.parseVar(init, true, kind)
     this.finishNode(init, "VariableDeclaration")
+    
+    // for-of 或者 for-in
     if ((this.type === tt._in || (this.options.ecmaVersion >= 6 && this.isContextual("of"))) && init.declarations.length === 1) {
       if (this.options.ecmaVersion >= 9) {
         if (this.type === tt._in) {
+          // in 形式不能在 await 里面
           if (awaitAt > -1) this.unexpected(awaitAt)
         } else node.await = awaitAt > -1
       }
       return this.parseForIn(node, init)
     }
+
+    // 剩下的一种情况是 for(var/let/const ...;)
     if (awaitAt > -1) this.unexpected(awaitAt)
     return this.parseFor(node, init)
   }
+
+  // 剩下一种是非赋值的表达式
   let refDestructuringErrors = new DestructuringErrors
+  // 解析表达式
   let init = this.parseExpression(true, refDestructuringErrors)
+
   if (this.type === tt._in || (this.options.ecmaVersion >= 6 && this.isContextual("of"))) {
+    // for( a in b) for (a of b) 这种形式
     if (this.options.ecmaVersion >= 9) {
       if (this.type === tt._in) {
         if (awaitAt > -1) this.unexpected(awaitAt)

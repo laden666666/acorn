@@ -15,13 +15,14 @@ export class TokContext {
     this.isExpr = !!isExpr
     // 保留空格
     this.preserveSpace = !!preserveSpace
-    // ？？
+    // 代替默认的 readToken 函数实现
     this.override = override
     // 创建新上下文？？
     this.generator = !!generator
   }
 }
 
+// 上下文字典对象
 export const types = {
   // 静态的块，不可用定义表达式
   b_stat: new TokContext("{", false),
